@@ -1,16 +1,23 @@
-# Jeyriku Vault - Secure Credential Management
+# 🔐 Jeyriku Vault - Secure Credential Management
+
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
+[![Security: AES-256](https://img.shields.io/badge/security-AES--256-green.svg)](https://en.wikipedia.org/wiki/Advanced_Encryption_Standard)
 
 **Jeyriku Vault** is a centralized, encrypted credential storage system designed for network automation tools. It provides a unified, secure way to manage passwords, API tokens, SSH keys, and other sensitive credentials across all your Jeyriku applications.
 
-## 🔐 Features
+> 🎯 **Perfect for**: Network engineers managing multiple devices, API tokens, and service credentials across tools like Ansible, PyATS, NetAlps Probe, and custom automation scripts.
 
-- **Strong Encryption**: AES-256 encryption with PBKDF2 key derivation
-- **Multiple Backends**: SQLCipher (encrypted SQLite) or encrypted file storage
-- **Master Password Protection**: Single password to unlock all credentials
-- **Audit Trail**: Track credential access and modifications (SQLCipher backend)
-- **CLI & Programmatic Access**: Use via command-line or Python API  
-- **Import/Export**: Backup and restore credentials
-- **Cross-Platform**: Works on macOS, Linux, and Windows
+## ✨ Features
+
+- 🔒 **Strong Encryption**: AES-256 encryption with PBKDF2 key derivation (100,000 iterations)
+- 💾 **Multiple Backends**: SQLCipher (encrypted SQLite) or encrypted file storage
+- 🔑 **Master Password Protection**: Single password to unlock all credentials
+- 📊 **Audit Trail**: Track credential access and modifications (SQLCipher backend)
+- 🖥️ **CLI & Programmatic Access**: Use via command-line or Python API  
+- 📦 **Import/Export**: Backup and restore credentials
+- 🌍 **Cross-Platform**: Works on macOS, Linux, and Windows
+- 🔌 **Integration Ready**: Easy to integrate with existing tools
 
 ## 🚀 Quick Start
 
