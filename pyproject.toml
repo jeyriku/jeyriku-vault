@@ -1,0 +1,49 @@
+[build-system]
+requires = ["setuptools>=45", "wheel", "setuptools_scm>=6.2"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "jeyriku-vault"
+version = "1.0.0"
+description = "Secure credential management system for Jeyriku network automation tools"
+readme = "README.md"
+authors = [
+    {name = "Jeremie Rouzet", email = "contact@jeyriku.net"}
+]
+license = {text = "MIT"}
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: System Administrators",
+    "Intended Audience :: Developers",
+    "Topic :: System :: Systems Administration",
+    "Topic :: Security",
+    "Topic :: Security :: Cryptography",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Operating System :: OS Independent",
+]
+keywords = ["vault", "credentials", "security", "encryption", "network", "automation"]
+requires-python = ">=3.9"
+dependencies = [
+    "cryptography>=41.0.0",
+]
+
+[project.optional-dependencies]
+sqlcipher = ["pysqlcipher3>=1.1.0"]
+all = ["pysqlcipher3>=1.1.0"]
+
+[project.urls]
+Homepage = "https://github.com/jeyriku/jeyriku-vault"
+"Bug Reports" = "https://github.com/jeyriku/jeyriku-vault/issues"
+Source = "https://github.com/jeyriku/jeyriku-vault"
+Documentation = "https://github.com/jeyriku/jeyriku-vault#readme"
+
+[project.scripts]
+jeyriku-vault = "jeyriku_vault.cli:main"
+
+[tool.setuptools]
+packages = ["jeyriku_vault"]
