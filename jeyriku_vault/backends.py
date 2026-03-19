@@ -263,14 +263,14 @@ class EncryptedFileBackend(Backend):
     def _derive_key(self, password: str) -> bytes:
         """Derive encryption key from password using PBKDF2"""
         from cryptography.hazmat.primitives import hashes
-        from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2
+        from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
         from cryptography.hazmat.backends import default_backend
         import base64
 
         # Use a fixed salt (in production, store this separately)
         salt = b'jeyriku_vault_salt_v1'
 
-        kdf = PBKDF2(
+        kdf = PBKDF2HMAC(
             algorithm=hashes.SHA256(),
             length=32,
             salt=salt,

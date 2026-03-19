@@ -98,7 +98,7 @@ class VaultManager:
     def __init__(
         self,
         vault_path: Optional[str] = None,
-        backend: str = "sqlcipher",
+        backend: str = "encrypted_file",
         auto_create: bool = True
     ):
         """
