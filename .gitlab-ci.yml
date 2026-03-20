@@ -86,7 +86,7 @@ publish:nexus:
       password: ${NEXUS_PASSWORD}
       PYPIRC
     - chmod 600 ~/.pypirc
-    - twine upload --repository nexus dist/* --verbose
+    - twine upload --repository nexus dist/* --verbose --skip-existing
     - echo "✅ jeyriku-vault publié avec succès sur Nexus!"
   dependencies:
     - build:package
