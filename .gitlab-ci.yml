@@ -69,22 +69,26 @@ publish:nexus:
   <<: *python_template
   stage: publish
   before_script:
+    - apt-get update -qq && apt-get install -y -qq git
     - python -V
     - pip install --upgrade pip build twine
+    - pip install git+http://jeysrv12:8090/jeyriku/jeyriku-vault.git -q
+    - mkdir -p ~/.jeyriku
+    - printf '%s' "$VAULT_ENC" | base64 -d > ~/.jeyriku/vault.enc
   script:
     - echo "🚀 Publication jeyriku-vault vers Nexus PyPI Repository..."
     - echo "Repository -> ${NEXUS_PYPI_URL}"
     - |
-      cat > ~/.pypirc << PYPIRC
-      [distutils]
-      index-servers =
-          nexus
-
-      [nexus]
-      repository: ${NEXUS_PYPI_URL}
-      username: ${NEXUS_USERNAME}
-      password: ${NEXUS_PASSWORD}
-      PYPIRC
+      python3 -c "
+      import os
+      from jeyriku_vault import VaultManager
+      vm = VaultManager(backend='encrypted_file')
+      vm.unlock(os.environ['VAULT_MASTER_PASSWORD'])
+      cred = vm.get_credential('nexus')
+      content = '[distutils]\nindex-servers = nexus\n\n[nexus]\nrepository: {}\nusername: {}\npassword: {}\n'.format(os.environ['NEXUS_PYPI_URL'], cred.username, cred.password)
+      open(os.path.expanduser('~/.pypirc'), 'w').write(content)
+      print('✅ .pypirc créé')
+      "
     - chmod 600 ~/.pypirc
     - twine upload --repository nexus dist/* --verbose
     - echo "✅ jeyriku-vault publié avec succès sur Nexus!"
