@@ -1,0 +1,97 @@
+# Pipeline CI/CD GitLab pour jeyriku-vault
+# Publication automatique vers Nexus PyPI sur jeysrv12
+
+variables:
+  PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache/pip"
+  PYTHON_VERSION: "3.11"
+  NEXUS_PYPI_URL: "http://jeysrv12:8081/repository/pypi-releases/"
+
+cache:
+  paths:
+    - .cache/pip
+
+stages:
+  - test
+  - build
+  - publish
+
+.python_template: &python_template
+  image: python:${PYTHON_VERSION}-slim
+  before_script:
+    - python -V
+    - pip install --upgrade pip
+
+# ========================================
+# STAGE 1: Validation
+# ========================================
+test:quality:
+  <<: *python_template
+  stage: test
+  script:
+    - echo "📊 Vérification de la structure jeyriku-vault..."
+    - test -f pyproject.toml && echo "✅ pyproject.toml présent"
+    - test -f README.md && echo "✅ README.md présent"
+    - test -d jeyriku_vault && echo "✅ Répertoire jeyriku_vault présent"
+    - pip install cryptography
+    - python -c "from jeyriku_vault import VaultManager; print('✅ Import OK')"
+    - echo "✅ Validation terminée"
+  only:
+    - branches
+    - merge_requests
+    - tags
+
+# ========================================
+# STAGE 2: Build
+# ========================================
+build:package:
+  <<: *python_template
+  stage: build
+  script:
+    - pip install build
+    - echo "📦 Build du package jeyriku-vault..."
+    - python -m build
+    - echo "📋 Packages créés:"
+    - ls -lh dist/
+  artifacts:
+    paths:
+      - dist/
+      - pyproject.toml
+    expire_in: 1 week
+  only:
+    - main
+    - master
+    - tags
+
+# ========================================
+# STAGE 3: Publication vers Nexus
+# ========================================
+publish:nexus:
+  <<: *python_template
+  stage: publish
+  before_script:
+    - python -V
+    - pip install --upgrade pip build twine
+  script:
+    - echo "🚀 Publication jeyriku-vault vers Nexus PyPI Repository..."
+    - echo "Repository -> ${NEXUS_PYPI_URL}"
+    - |
+      cat > ~/.pypirc << PYPIRC
+      [distutils]
+      index-servers =
+          nexus
+
+      [nexus]
+      repository: ${NEXUS_PYPI_URL}
+      username: ${NEXUS_USERNAME}
+      password: ${NEXUS_PASSWORD}
+      PYPIRC
+    - chmod 600 ~/.pypirc
+    - twine upload --repository nexus dist/* --verbose
+    - echo "✅ jeyriku-vault publié avec succès sur Nexus!"
+  dependencies:
+    - build:package
+  only:
+    - main
+    - master
+    - tags
+  when: on_success
